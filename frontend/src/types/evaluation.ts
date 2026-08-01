@@ -38,3 +38,10 @@ export interface EvaluateContentResult {
   evidence_matrix: Record<string, unknown>;
   recommendations: EvaluationRecommendations;
 }
+class RewriteRequest(BaseModel):
+brand_dna: BrandDNA
+content: str
+
+
+class RewriteData(BaseModel):
+rewritten_content: str
