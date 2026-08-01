@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { rewriteContent } from "@/services/rewriteService";
 import { BrandDiscoveryForm } from "@/components/BrandDiscoveryForm";
 import { BrandDnaResult } from "@/components/BrandDnaResult";
 import { EvaluationForm } from "@/components/EvaluationForm";
@@ -9,17 +11,38 @@ import { evaluateContent } from "@/services/evaluationService";
 export function Evaluate() {
   const discovery = useApi(discoverBrand);
   const evaluation = useApi(evaluateContent);
-
+  const rewrite = useApi(rewriteContent);
+  const [originalContent, setOriginalContent] = useState("");
   const brand = discovery.status === "success" ? discovery.data : null;
 
   function handleEvaluate(content: string) {
     if (!brand) return;
-    evaluation.run({ brand_id: brand.brand_id, content_type: "text", content });
+
+    setOriginalContent(content);
+
+    evaluation.run({
+      brand_id: brand.brand_id,
+      content_type: "text",
+      content,
+      brand_dna: brand.brand_dna,
+    });
   }
+
+  function handleRewrite(content: string) {
+    if (!brand) return;
+
+    rewrite.run({
+      brand_dna: brand.brand_dna,
+      content,
+    });
+  }
+
 
   function handleUseDifferentWebsite() {
     discovery.reset();
     evaluation.reset();
+    rewrite.reset();
+    setOriginalContent("");
   }
 
   return (
@@ -138,26 +161,72 @@ export function Evaluate() {
             </div>
           )}
 
-          {evaluation.status === "error" && (
-            <div
-              role="alert"
-              className="mt-6 rounded-card border border-warn-600/30 bg-surface-1 px-5 py-4"
-            >
-              <p className="font-mono text-xs uppercase tracking-[0.06em] text-warn-600">
-                {evaluation.error.code}
-              </p>
-              <p className="mt-1 text-sm text-ink-900">{evaluation.error.message}</p>
-            </div>
-          )}
-
           {evaluation.status === "success" && evaluation.data && (
             <div className="mt-10">
               <h2 className="font-display text-lg font-semibold text-ink-900">
                 Results
               </h2>
+
               <div className="mt-5">
                 <ResultsDashboard result={evaluation.data} />
               </div>
+
+              {/* Rewrite Button */}
+              <div className="mt-6">
+                <button
+                  type="button"
+                  onClick={() => handleRewrite(originalContent)}
+                  disabled={rewrite.status === "loading"}
+                  className="rounded-card bg-signal-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-signal-500 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {rewrite.status === "loading"
+                    ? "Rewriting..."
+                    : "✨ Rewrite Content"}
+                </button>
+              </div>
+
+              {/* Rewrite Error */}
+              {rewrite.status === "error" && (
+                <div
+                  role="alert"
+                  className="mt-6 rounded-card border border-warn-600/30 bg-surface-1 px-5 py-4"
+                >
+                  <p className="font-mono text-xs uppercase tracking-[0.06em] text-warn-600">
+                    {rewrite.error.code}
+                  </p>
+
+                  <p className="mt-1 text-sm text-ink-900">
+                    {rewrite.error.message}
+                  </p>
+                </div>
+              )}
+
+              {/* Rewrite Result */}
+              {rewrite.status === "success" && rewrite.data && (
+                <div className="mt-8 rounded-card border border-surface-2 bg-surface-1 p-6">
+                  <h3 className="font-display text-lg font-semibold text-ink-900">
+                    ✨ AI Rewritten Content
+                  </h3>
+
+                  <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-ink-700">
+                    {rewrite.data.rewritten_content}
+                  </p>
+
+                  {rewrite.data.improvement_summary.length > 0 && (
+                    <>
+                      <h4 className="mt-6 font-semibold text-ink-900">
+                        Improvements Made
+                      </h4>
+
+                      <ul className="mt-2 list-disc pl-6 text-sm text-ink-700">
+                        {rewrite.data.improvement_summary.map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </section>

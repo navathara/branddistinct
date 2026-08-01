@@ -12,6 +12,7 @@ export interface EvaluateContentRequest {
   brand_id: string;
   content_type: "text";
   content: string;
+  brand_dna: Record<string, unknown>;
 }
 
 /** BDSF dimension scores, keyed exactly as in 02_bdsf.yaml's `dimensions`. */
