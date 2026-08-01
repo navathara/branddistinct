@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/*
+  Design tokens for BrandDistinct AI.
+
+  Concept: the product turns a brand's identity into a measurable
+  "signature" across six dimensions. The palette and type reflect a
+  precision-instrument feel — a calibration surface, not a marketing
+  page — since the audience (brand + growth teams) needs to trust the
+  numbers it shows.
+*/
+@theme {
+  /* Surfaces */
+  --color-surface-0: #f2f3ef; /* app background: cool paper, not warm cream */
+  --color-surface-1: #ffffff; /* raised cards */
+  --color-surface-2: #e7e9e2; /* subtle recessed panels / grid lines */
+
+  /* Ink */
+  --color-ink-900: #14171a; /* primary text */
+  --color-ink-600: #4b5158; /* secondary text */
+  --color-ink-400: #8b9096; /* tertiary / captions */
+
+  /* Signal accent — the single distinctive color, used sparingly */
+  --color-signal-600: #2451ff;
+  --color-signal-500: #3d63ff;
+  --color-signal-100: #e3e9ff;
+
+  /* Status */
+  --color-warn-600: #b5750c;
+  --color-good-600: #147a52;
+
+  /* Type */
+  --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Radii kept tight — this is measurement equipment, not a plush app */
+  --radius-card: 0.25rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-surface-0);
+    color: var(--color-ink-900);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal-600);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/*
+  Faint calibration-grid backdrop used behind the hero signature graphic.
+  A subtle nod to measurement/graph paper without leaning on a cliché
+  dot-grid-everywhere treatment — confined to one section.
+*/
+.grid-surface {
+  background-image:
+    linear-gradient(to right, var(--color-surface-2) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--color-surface-2) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
