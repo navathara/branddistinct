@@ -36,7 +36,19 @@ async def generate_text(
             ],
         )
 
-        return response.content[0].text
+        # Claude may return multiple content blocks:
+        # ThinkingBlock, TextBlock, etc.
+        # Extract only text blocks.
+        text_parts = []
+
+        for block in response.content:
+            if hasattr(block, "text"):
+                text_parts.append(block.text)
+
+        if not text_parts:
+            raise RuntimeError("Claude returned no text content.")
+
+        return "\n".join(text_parts)
 
     except Exception as exc:
         raise RuntimeError(f"Claude request failed: {exc}") from exc

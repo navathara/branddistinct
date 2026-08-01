@@ -48,16 +48,17 @@ from models.brand_dna import BrandDNA
 from models.evaluation import (
     ContentEvaluationResult,
     EvaluationData,
-    RecommendationsPlaceholder,
+    Recommendations,
     RelevanceCheckResult,
 )
+from services.recommendation_service import generate_recommendations
 from prompts.evaluation_prompt import (
     build_content_evaluation_prompt,
     build_relevance_check_prompt,
 )
 from utils.claude_client import generate_text
 
-_MAX_GEMINI_ATTEMPTS = 2  # 1 initial attempt + 1 retry, consistent with the Brand Discovery Engine
+_MAX_CLAUDE_ATTEMPTS = 2  # 1 initial attempt + 1 retry, consistent with the Brand Discovery Engine
 
 _SUPPORTED_CONTENT_TYPES = {"text"}
 
@@ -71,35 +72,57 @@ def _strip_json_fences(raw_text: str) -> str:
 
 
 async def _call_gemini_structured(prompt: str, model_cls: type):
-    """
-    Sends `prompt` to Gemini, retrying once on a malformed/invalid
-    response, and returns a validated instance of `model_cls`.
-
-    Raises:
-        AIResponseError: if Gemini fails or returns an invalid
-            response on both attempts.
-    """
     last_error = ""
-    for _ in range(_MAX_GEMINI_ATTEMPTS):
+
+    for _ in range(_MAX_CLAUDE_ATTEMPTS):
         try:
             raw_response = await generate_text(
-                prompt, settings.gemini_api_key, settings.gemini_model
+                prompt,
+                settings.claude_api_key,
+                settings.claude_model,
             )
         except RuntimeError as exc:
+            print("\nCLAUDE ERROR:\n", exc)
             last_error = str(exc)
             continue
 
         try:
             cleaned = _strip_json_fences(raw_response)
+
+            print("\n========== RAW CLAUDE RESPONSE ==========")
+            print(cleaned)
+            print("=========================================\n")
+
             data = json.loads(cleaned)
-            return model_cls(**data)
-        except (json.JSONDecodeError, TypeError, ValueError):
-            last_error = "Gemini response was not valid JSON matching the expected schema."
+
+            result = model_cls(**data)
+
+            print("\n========== VALIDATION SUCCESS ==========")
+            print(result)
+            print("========================================\n")
+
+            return result
+
+        except Exception as exc:
+            print("\n========== VALIDATION ERROR ==========")
+            print(exc)
+
+            try:
+                print("\nJSON DATA:")
+                print(data)
+            except Exception:
+                pass
+
+            print("\nRAW RESPONSE:")
+            print(raw_response)
+            print("======================================\n")
+
+            last_error = str(exc)
             continue
 
     raise AIResponseError(
-        f"Gemini failed to produce a valid {model_cls.__name__} after "
-        f"{_MAX_GEMINI_ATTEMPTS} attempt(s): {last_error}"
+        f"Claude failed to produce a valid {model_cls.__name__} after "
+        f"{_MAX_CLAUDE_ATTEMPTS} attempt(s): {last_error}"
     )
 
 
@@ -181,13 +204,15 @@ async def evaluate_content(brand_dna: BrandDNA, content_type: str, content: str)
             "Evaluation confidence is below the acceptable threshold; "
             "treat this score as indicative, not fully reliable."
         )
-
+    from core.recommendations import generate_recommendations
     return EvaluationData(
-        overall_score=overall_score,
-        dimension_scores=bdsf_scores,
-        genericness_penalty=genericness_penalty,
-        evaluation_confidence=evaluation_confidence,
-        evidence_matrix=evidence_matrix,
-        recommendations=RecommendationsPlaceholder(),
-        warnings=warnings,
+    overall_score=overall_score,
+    dimension_scores=bdsf_scores,
+    genericness_penalty=genericness_penalty,
+    evaluation_confidence=evaluation_confidence,
+    evidence_matrix=evidence_matrix,
+    recommendations=generate_recommendations(
+        evaluation_result
+    ),
+    warnings=warnings,
     )

@@ -79,13 +79,13 @@ class EvidenceMatrixEntry(BaseModel):
     supporting_examples: list[str] = Field(default_factory=list)
 
 
-class RecommendationsPlaceholder(BaseModel):
+
+class Recommendations(BaseModel):
     """
     Empty structure — Recommendation Generation (step_7) is out of
     scope for this task. Kept as a field (rather than omitted) to
     preserve the response schema defined in 08_api_contracts.md.
     """
-
     quick_fixes: list[str] = Field(default_factory=list)
     strategic_improvements: list[str] = Field(default_factory=list)
 
@@ -98,7 +98,7 @@ class EvaluationData(BaseModel):
     genericness_penalty: int = Field(ge=0, le=10)
     evaluation_confidence: float = Field(ge=0.0, le=1.0)
     evidence_matrix: dict[str, EvidenceMatrixEntry]
-    recommendations: RecommendationsPlaceholder
+    recommendations: Recommendations
     warnings: list[str] = Field(
         default_factory=list,
         description=(
@@ -178,3 +178,12 @@ class ContentEvaluationResult(BaseModel):
     visual_identity: CanonicalDimensionResult
     values: CanonicalDimensionResult
     genericness_signals: GenericnessSignals
+
+class RewriteRequest(BaseModel):
+    brand_dna: BrandDNA
+    content: str = Field(..., min_length=1)
+
+
+class RewriteData(BaseModel):
+    rewritten_content: str
+    improvement_summary: list[str] = Field(default_factory=list)
