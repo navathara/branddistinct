@@ -99,7 +99,7 @@ async def discover_brand_dna(website_url: str) -> BrandDiscoveryData:
     last_error = ""
     for _ in range(_MAX_GEMINI_ATTEMPTS):
         try:
-            raw_response = await generate_structured_json(
+            raw_response = await generate_text(
                 prompt,settings.claude_api_key, settings.claude_model,
             )
         except RuntimeError as exc:
