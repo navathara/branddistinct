@@ -67,13 +67,13 @@ export function EvidenceMatrixPanel({ evidenceMatrix }: EvidenceMatrixPanelProps
       </p>
 
       {entries.length === 0 ? (
-        <div className="mt-4 rounded-card border border-surface-2 bg-surface-1 p-5">
+        <div className="mt-4 card-elevated rounded-xl border border-surface-2 bg-surface-1 p-5">
           <p className="text-sm text-ink-400">No evidence was returned for this evaluation.</p>
         </div>
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {entries.map(([key, value]) => (
-            <div key={key} className="rounded-card border border-surface-2 bg-surface-1 p-5">
+            <div key={key} className="card-elevated rounded-xl border border-surface-2 bg-surface-1 p-5">
               <h3 className="font-display text-base font-semibold text-ink-900">
                 {formatKey(key)}
               </h3>

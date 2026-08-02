@@ -31,7 +31,7 @@ export function RecommendationsPanel({ recommendations }: RecommendationsPanelPr
       </p>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div className="rounded-card border border-surface-2 bg-surface-1 p-5">
+        <div className="card-elevated rounded-xl border border-surface-2 bg-surface-1 p-5">
           <h3 className="font-display text-base font-semibold text-ink-900">Quick Fixes</h3>
           <RecommendationList
             items={recommendations.quick_fixes}
@@ -39,7 +39,7 @@ export function RecommendationsPanel({ recommendations }: RecommendationsPanelPr
           />
         </div>
 
-        <div className="rounded-card border border-surface-2 bg-surface-1 p-5">
+        <div className="card-elevated rounded-xl border border-surface-2 bg-surface-1 p-5">
           <h3 className="font-display text-base font-semibold text-ink-900">
             Strategic Improvements
           </h3>

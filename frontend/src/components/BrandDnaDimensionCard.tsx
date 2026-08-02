@@ -29,7 +29,7 @@ export function BrandDnaDimensionCard({ label, dimension }: BrandDnaDimensionCar
     .filter((entry): entry is [string, string] => entry[1] !== null);
 
   return (
-    <div className="rounded-card border border-surface-2 bg-surface-1 p-5">
+    <div className="card-elevated rounded-xl border border-surface-2 bg-surface-1 p-5">
       <h3 className="font-display text-base font-semibold text-ink-900">{label}</h3>
 
       {entries.length === 0 ? (

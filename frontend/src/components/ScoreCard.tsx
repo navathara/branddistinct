@@ -28,7 +28,7 @@ export function ScoreCard({
   const displayValue = Number.isInteger(value) ? value : value.toFixed(1);
 
   return (
-    <div className="rounded-card border border-surface-2 bg-surface-1 p-5">
+    <div className="card-elevated rounded-xl border border-surface-2 bg-surface-1 p-5">
       <p className="font-mono text-xs uppercase tracking-[0.06em] text-ink-400">{label}</p>
       {caption && <p className="mt-0.5 text-xs text-ink-400">{caption}</p>}
 

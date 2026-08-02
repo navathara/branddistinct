@@ -1,53 +1,72 @@
 @import "tailwindcss";
 
-/*
-  Design tokens for BrandDistinct AI.
-
-  Concept: the product turns a brand's identity into a measurable
-  "signature" across six dimensions. The palette and type reflect a
-  precision-instrument feel — a calibration surface, not a marketing
-  page — since the audience (brand + growth teams) needs to trust the
-  numbers it shows.
-*/
 @theme {
   /* Surfaces */
-  --color-surface-0: #f2f3ef; /* app background: cool paper, not warm cream */
-  --color-surface-1: #ffffff; /* raised cards */
-  --color-surface-2: #e7e9e2; /* subtle recessed panels / grid lines */
+  --color-surface-0: #f2f3ef;
+  --color-surface-1: #ffffff;
+  --color-surface-2: #e7e9e2;
+  --color-surface-3: #dfe2da;
 
   /* Ink */
-  --color-ink-900: #14171a; /* primary text */
-  --color-ink-600: #4b5158; /* secondary text */
-  --color-ink-400: #8b9096; /* tertiary / captions */
+  --color-ink-900: #14171a;
+  --color-ink-700: #30353a;
+  --color-ink-600: #4b5158;
+  --color-ink-400: #8b9096;
 
-  /* Signal accent — the single distinctive color, used sparingly */
+  /* Signal */
+  --color-signal-700: #193ed1;
   --color-signal-600: #2451ff;
   --color-signal-500: #3d63ff;
   --color-signal-100: #e3e9ff;
+  --color-signal-50: #f2f5ff;
 
   /* Status */
   --color-warn-600: #b5750c;
+  --color-warn-100: #fff3dc;
   --color-good-600: #147a52;
+  --color-good-100: #e4f6ee;
 
-  /* Type */
+  /* Fonts */
   --font-display: "Space Grotesk", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* Radii kept tight — this is measurement equipment, not a plush app */
-  --radius-card: 0.25rem;
+  /* Radius */
+  --radius-card: 0.75rem;
+  --radius-control: 0.625rem;
+
+  /* Shadows */
+  --shadow-card:
+    0 1px 2px rgb(20 23 26 / 0.04),
+    0 8px 24px rgb(20 23 26 / 0.05);
+
+  --shadow-card-hover:
+    0 2px 5px rgb(20 23 26 / 0.06),
+    0 16px 40px rgb(20 23 26 / 0.10);
+
+  --shadow-button: 0 5px 14px rgb(36 81 255 / 0.22);
 }
 
 @layer base {
   html {
     color-scheme: light;
+    scroll-behavior: smooth;
   }
 
   body {
-    background-color: var(--color-surface-0);
+    min-width: 320px;
+    background:
+      radial-gradient(circle at 10% 0%,
+        rgb(36 81 255 / 0.07),
+        transparent 30rem),
+      radial-gradient(circle at 90% 20%,
+        rgb(36 81 255 / 0.04),
+        transparent 28rem),
+      var(--color-surface-0);
     color: var(--color-ink-900);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   h1,
@@ -55,34 +74,204 @@
   h3,
   h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
+  }
+
+  button,
+  a,
+  input,
+  textarea,
+  select {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  ::selection {
+    background-color: var(--color-signal-100);
+    color: var(--color-ink-900);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-signal-600);
-    outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
+    outline-offset: 3px;
   }
 }
 
-/*
-  Faint calibration-grid backdrop used behind the hero signature graphic.
-  A subtle nod to measurement/graph paper without leaning on a cliché
-  dot-grid-everywhere treatment — confined to one section.
-*/
+@layer components {
+  .ui-card {
+    border: 1px solid rgb(20 23 26 / 0.08);
+    background-color: rgb(255 255 255 / 0.92);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(10px);
+  }
+
+  .ui-card-hover {
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      border-color 180ms ease;
+  }
+
+  .ui-card-hover:hover {
+    transform: translateY(-3px);
+    border-color: rgb(36 81 255 / 0.2);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .ui-button-primary {
+    border-radius: var(--radius-control);
+    background-color: var(--color-signal-600);
+    color: white;
+    box-shadow: var(--shadow-button);
+    transition:
+      transform 160ms ease,
+      background-color 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .ui-button-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background-color: var(--color-signal-500);
+    box-shadow: 0 8px 20px rgb(36 81 255 / 0.28);
+  }
+
+  .ui-button-primary:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .ui-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-signal-600);
+  }
+
+  .animate-enter {
+    animation: enter 500ms ease-out both;
+  }
+
+  .animate-enter-delay {
+    animation: enter 500ms 100ms ease-out both;
+  }
+
+  .animate-enter-delay-2 {
+    animation: enter 500ms 200ms ease-out both;
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .grid-surface {
   background-image:
-    linear-gradient(to right, var(--color-surface-2) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--color-surface-2) 1px, transparent 1px);
+    linear-gradient(to right,
+      rgb(20 23 26 / 0.055) 1px,
+      transparent 1px),
+    linear-gradient(to bottom,
+      rgb(20 23 26 / 0.055) 1px,
+      transparent 1px);
   background-size: 28px 28px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background:
+    radial-gradient(circle at 10% 0%,
+      rgb(36 81 255 / 0.08),
+      transparent 32rem),
+    radial-gradient(circle at 90% 15%,
+      rgb(36 81 255 / 0.05),
+      transparent 28rem),
+    var(--color-surface-0);
+}
+
+/* Give white panels more depth */
+.bg-surface-1 {
+  box-shadow:
+    0 1px 3px rgb(20 23 26 / 0.05),
+    0 10px 30px rgb(20 23 26 / 0.06);
+}
+
+/* Smooth card interaction */
+.rounded-card {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+/* Improve primary buttons */
+.bg-signal-600 {
+  box-shadow: 0 6px 18px rgb(36 81 255 / 0.22);
+  transition:
+    transform 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.bg-signal-600:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgb(36 81 255 / 0.28);
+}
+
+/* Softer input appearance */
+input,
+textarea {
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--color-signal-600);
+  box-shadow: 0 0 0 4px rgb(36 81 255 / 0.1);
+}
+
+/* Subtle entrance animation */
+main {
+  animation: page-enter 400ms ease-out;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
