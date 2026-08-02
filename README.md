@@ -79,6 +79,7 @@ CLAUDE_MODEL=claude-sonnet-5
 ```
 
 ---
+Copy everything below and replace only the **Installation Instructions** section in your `README.md`.
 
 ## Installation Instructions
 
@@ -91,11 +92,19 @@ cd branddistinct
 
 ### 2. Backend Setup
 
+Navigate to the backend folder:
+
 ```bash
 cd backend
+```
 
+Create a virtual environment:
+
+```bash
 python -m venv venv
 ```
+
+Activate the virtual environment:
 
 #### Windows
 
@@ -109,10 +118,17 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-Install dependencies:
+Install the required dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+Create a `.env` file inside the `backend` folder and add:
+
+```env
+CLAUDE_API_KEY=your_anthropic_api_key
+CLAUDE_MODEL=claude-sonnet-5
 ```
 
 Start the backend server:
@@ -121,36 +137,83 @@ Start the backend server:
 uvicorn main:app --reload
 ```
 
-Backend runs at:
+The backend will run at:
 
 ```text
 http://localhost:8000
+```
+
+The API will be available at:
+
+```text
+http://localhost:8000/api
 ```
 
 ---
 
 ### 3. Frontend Setup
 
-Open a new terminal:
+Open a new terminal and navigate to the frontend folder:
 
 ```bash
 cd frontend
+```
+
+Install the frontend dependencies:
+
+```bash
 npm install
 ```
 
-Start the development server:
+Create a `.env` file inside the `frontend` folder and add:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000/api
+```
+
+Start the frontend development server:
 
 ```bash
 npm run dev
 ```
 
-Frontend runs at:
+The frontend will run at:
 
 ```text
 http://localhost:5173
 ```
 
+Open the frontend URL in your browser.
+
 ---
+
+### 4. Production Deployment
+
+The application is deployed using:
+
+* **Frontend:** Vercel
+* **Backend:** Render
+
+Live application:
+
+```text
+https://branddistinct-pmmcr4gse-branddistinct.vercel.app
+```
+
+Backend API:
+
+```text
+https://branddistinct.onrender.com
+```
+
+For the production frontend, set this environment variable in Vercel:
+
+```env
+VITE_API_BASE_URL=https://branddistinct.onrender.com/api
+```
+
+> **Security Note:** Never commit `.env` files or API keys to GitHub. Make sure `.env` is included in `.gitignore`.
+
 
 ## Usage Examples
 
