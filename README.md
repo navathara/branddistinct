@@ -1,6 +1,6 @@
 # BrandDistinct
 
-## Project Title & Short Description
+
 
 **BrandDistinct** is an AI-powered brand evaluation platform that measures how well content reflects a brand's unique identity. It helps marketers, content creators, and businesses validate brand consistency, identify generic messaging, and generate improved brand-aligned content using AI.
 
@@ -75,7 +75,7 @@ Create a `.env` file inside the backend directory:
 
 ```env
 CLAUDE_API_KEY=your_api_key_here
-CLAUDE_MODEL=claude-sonnet-4
+CLAUDE_MODEL=claude-sonnet-5
 ```
 
 ---
@@ -85,8 +85,8 @@ CLAUDE_MODEL=claude-sonnet-4
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/branddistinct-ai.git
-cd branddistinct-ai
+git clone https://github.com/navathara/branddistinct.git
+cd branddistinct
 ```
 
 ### 2. Backend Setup
