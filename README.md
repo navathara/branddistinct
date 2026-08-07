@@ -79,7 +79,6 @@ CLAUDE_MODEL=claude-sonnet-5
 ```
 
 ---
-Copy everything below and replace only the **Installation Instructions** section in your `README.md`.
 
 ## Installation Instructions
 
@@ -212,7 +211,7 @@ For the production frontend, set this environment variable in Vercel:
 VITE_API_BASE_URL=https://branddistinct.onrender.com/api
 ```
 
-> **Security Note:** Never commit `.env` files or API keys to GitHub. Make sure `.env` is included in `.gitignore`.
+
 
 
 ## Usage Examples
@@ -307,8 +306,3 @@ Python empowers developers with a simple yet powerful platform for building inno
 
 This project is licensed under the **MIT License**.
 
-See the full license here:
-
-```text
-LICENSE
-```
